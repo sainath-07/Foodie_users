@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 const ResturantChain = () => {
   const [firms, setFirms] = useState([]);
+  const [dummyfirms, setdummyFirms] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -16,8 +17,9 @@ const ResturantChain = () => {
     try {
       const response = await axios.get(`${Api_Url}/vendor/all-vendors`);
       if (response.status >= 200 && response.status <= 299) {
-        console.log(response.data.vendor);
+        console.log(response.data.vendor, "response.data.vendor");
         setFirms(response.data.vendor);
+        setdummyFirms(response.data.vendor);
       }
     } catch (error) {
       console.log(error, "internal server error");
@@ -33,11 +35,41 @@ const ResturantChain = () => {
     fontStyle: "normal",
   };
 
+  let filterstyling = {
+    borderRadius: "22px",
+    fontFamily: "Poppins, sans-serif",
+    fontWeight: 500,
+    color: "gray",
+    fontStyle: "normal",
+    border: " 1px solid rgba(2, 6, 12, 0.15)",
+    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+  };
+
+  const handleRegion = (data) => {
+    if (data === "All") {
+      setFirms(dummyfirms);
+    } else if (data === "veg" || data === "Non-veg") {
+      const Alldata = dummyfirms.filter((product) =>
+        product.firm.category.includes(data)
+      );
+      setFirms(Alldata);
+    } else {
+      const Alldata = dummyfirms.filter((product) =>
+        product.firm.region.includes(data)
+      );
+      setFirms(Alldata);
+    }
+  };
+
   return (
     <>
-      <section className="mt-8 w-[85%] mx-auto ">
+      <section className="mt-8 w-[90%] mx-auto ">
         {loading ? (
-          <PulseLoader color="#4abf62" />
+          <>
+            <div className="flex justify-center">
+              <PulseLoader color="#4abf62" />
+            </div>
+          </>
         ) : (
           <>
             <p
@@ -50,22 +82,70 @@ const ResturantChain = () => {
             >
               Discover best restaurants
             </p>
-            <div
-              className="flex flex-wrap gap-8 mt-8 justify-between"
-              style={{
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            >
+            <div className="flex gap-4 flex-wrap mt-4">
+              <button
+                className="text-center text-[16px] px-4 py-1 cursor-pointer"
+                style={filterstyling}
+                onClick={() => handleRegion("All")}
+              >
+                All
+              </button>
+              <button
+                className="text-center text-[16px] px-4 py-1 cursor-pointer"
+                style={filterstyling}
+                onClick={() => handleRegion("South-Indian")}
+              >
+                South-Indian
+              </button>
+              <button
+                className="text-center text-[16px] px-4 py-1 cursor-pointer"
+                style={filterstyling}
+                onClick={() => handleRegion("North-Indian")}
+              >
+                North-Indian
+              </button>
+              <button
+                className="text-center text-[16px] px-4 py-1 cursor-pointer"
+                style={filterstyling}
+                onClick={() => handleRegion("chinese")}
+              >
+                Chinese
+              </button>
+              <button
+                className="text-center text-[16px] px-4 py-1 cursor-pointer"
+                style={filterstyling}
+                onClick={() => handleRegion("bakery")}
+              >
+                Bakery
+              </button>
+              <button
+                className="text-center text-[16px] px-4 py-1 cursor-pointer"
+                style={filterstyling}
+                onClick={() => handleRegion("veg")}
+              >
+                Veg
+              </button>
+              <button
+                className="text-center text-[16px] px-4 py-1 cursor-pointer"
+                style={filterstyling}
+                onClick={() => handleRegion("Non-veg")}
+              >
+                Non-Veg
+              </button>
+            </div>
+            {/* blue */}
+            <div className="flex flex-wrap sm:gap-6 gap-4 mt-8 justify-center">
               {Array.isArray(firms) && firms.length > 0 ? (
                 firms.map((value) => {
                   const { _id, firm } = value;
-                  const { firmName, image, region, category, offer } =
+                  const { firmName, image, region, category, offer, area } =
                     firm || {};
                   return (
                     <React.Fragment key={_id}>
-                      <Link to={`/products/${firmName}/${firm._id}`}>
+                      <Link to={`/products/${firmName}/${firm._id}/${area}`}>
                         <div
-                          className="flex flex-col cursor-pointer p-4 rounded relative border-2 border-black"
+                          className="flex flex-col  cursor-pointer p-4  rounded relative"
+                          // red border
                           style={{
                             boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                           }}
@@ -97,7 +177,6 @@ const ResturantChain = () => {
                                 }}
                               >
                                 {firmName}
-                                {/* {firm._id} */}
                               </strong>
                             </li>
                             <li
@@ -123,7 +202,7 @@ const ResturantChain = () => {
                               {category.map((value, index) => {
                                 return (
                                   <React.Fragment key={index}>
-                                    <span className=" mx-2 px-2">{value}</span>
+                                    <span className="px-2">{value}</span>
                                   </React.Fragment>
                                 );
                               })}

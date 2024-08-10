@@ -14,7 +14,7 @@ const StaticImages = () => {
   const handleScroll = (direction) => {
     const scrollimages = document.getElementById("scrollimages");
 
-    const scrollAmount = 400;
+    const scrollAmount = 500;
 
     if (direction === "left") {
       // console.log("object");
@@ -31,28 +31,28 @@ const StaticImages = () => {
     }
   };
   return (
-    <div className="mt-24 w-[85%] mx-auto ">
-      <div className="mx-auto flex justify-between">
+    <div className="mt-20 w-[90%] mx-auto ">
+      <div className="mx-auto flex justify-between items-center">
         <p
-          className="text-2xl "
+          className="sm:text-2xl text-[18px]"
           style={{
             fontFamily: "Poppins, sans-serif",
             fontWeight: 700,
             fontStyle: "normal",
           }}
         >
-          Order our best food options
+          Order our best food
         </p>
-        <div className="flex gap-4 text-xl">
+        <div className="flex gap-2 text-xl">
           <button
             onClick={() => handleScroll("left")}
-            className="bg-gray-100 rounded-full w-12 h-12 p-2 justify-center flex items-center"
-            >
+            className="bg-gray-100 rounded-full w-12 h-12 p-2 justify-center flex items-center cursor-pointer"
+          >
             <ArrowLeft size={24} />
           </button>
           <button
             onClick={() => handleScroll("right")}
-            className="bg-gray-100 rounded-full w-12 h-12 p-2 justify-center flex items-center"
+            className="bg-gray-100 rounded-full w-12 h-12 p-2 justify-center flex items-center cursor-pointer"
           >
             <ArrowRight size={24} />
           </button>
@@ -61,8 +61,8 @@ const StaticImages = () => {
 
       <div
         id="scrollimages"
-        className="mt-8 flex overflow-x-auto scrollbar-hide"
-      
+        className="mt-2 flex overflow-x-auto scrollbar-hide"
+        // style={{boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px"}}
         onScroll={(e) => setScrollPosition(e.target.scrollLeft)}
       >
         {displayImages.map((value, index) => {
@@ -71,8 +71,9 @@ const StaticImages = () => {
               <img
                 src={value.img}
                 alt=""
-                className="w-[15%]
-              h-[120px]"
+                className="w-[25%]  h-[100px] 
+                sm:w-[28%] sm:h-[120px]
+             "
               />
             </React.Fragment>
           );

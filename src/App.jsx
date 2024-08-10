@@ -4,12 +4,18 @@ import Navigation from "./page/navigation";
 import FirmCollection from "./components/FirmCollection";
 
 const App = () => {
+  
+
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Navigation />} />
-        <Route path="/products/:frimName/:firmId" element={<FirmCollection />} />
-      </Routes>
+      
+        <Routes>
+          <Route path="/" element={<Navigation />} />
+          <Route
+            path="/products/:frimName/:firmId/:area"
+            element={<FirmCollection />}
+          />
+        </Routes>
     </>
   );
 };
