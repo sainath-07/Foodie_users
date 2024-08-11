@@ -1,11 +1,15 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Api_Url } from "../utils/ApiUrl";
 import { Link, useParams } from "react-router-dom";
-import { SyncLoader } from "react-spinners";
+import { BeatLoader, SyncLoader } from "react-spinners";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import clsx from "clsx";
 import { SkipBack, StepForward } from "lucide-react";
+import { data } from "../App";
+import MobileResponsive from "./MobileResponsive";
+import FooterPage from "./FooterPage";
+import toast from "react-hot-toast";
 
 const FirmCollection = () => {
   // Products State
@@ -13,9 +17,17 @@ const FirmCollection = () => {
   const [dummyproducts, setdummyproducts] = useState([]);
   // sortPrice State
   const [sortValue, setsortValue] = useState("");
-  const [isSidemenuopen, setsidemenu] = useState(false);
 
   const { frimName, firmId, area } = useParams();
+
+  const {
+    addtocart,
+    cartProducts,
+    setcartProducts,
+    fetchCartProdcuts,
+    isSidemenuopen,
+    setsidemenu,
+  } = useContext(data);
 
   useEffect(() => {
     fetchFirmProducts();
@@ -26,13 +38,14 @@ const FirmCollection = () => {
     try {
       let response = await axios.get(`${Api_Url}/product/${firmId}`);
 
-      // console.log(response, "resposne from firmcollection");
+      console.log(response, "resposne from firmcollection");
       // console.log(response.data.products, "response.data.products");
       setproducts(response.data.products);
       setdummyproducts(response.data.products);
     } catch (error) {
       console.log(error, "error message");
-      alert("No response form server.");
+      toast.error("No response form server.");
+      // alert("No response form server.");
     }
   };
 
@@ -79,12 +92,6 @@ const FirmCollection = () => {
     }
   };
 
-  let poppins = {
-    fontFamily: "Poppins, sans-serif",
-    fontWeight: "600",
-    fontStyle: "normal",
-  };
-
   let filterstyling = {
     borderRadius: "15px",
     fontFamily: "Poppins, sans-serif",
@@ -96,6 +103,16 @@ const FirmCollection = () => {
     boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
   };
 
+  const isProductInCart = (id) => {
+    // console.log(id,'some')
+    return cartProducts.some((item) => item.productId === id);
+  };
+
+  let poppins = {
+    fontFamily: "Poppins, sans-serif",
+    fontWeight: "600",
+    fontStyle: "normal",
+  };
   return (
     <>
       {/* topBar in firm collections */}
@@ -118,63 +135,34 @@ const FirmCollection = () => {
             onClick={() => setsidemenu(true)}
           />
 
-          <p
-            style={poppins}
-            className="text-xl cursor-pointer md:text-2xl"
-            // onClick={handleHomePage}
-          >
-           <Link to={'/'}>Foodie.com</Link> 
+          <p style={poppins} className="text-xl cursor-pointer md:text-2xl">
+            <Link to={"/"}>Foodie.com</Link>
           </p>
         </section>
 
         {/* Mobile responsive code */}
-        <section
-          className={clsx(
-            "fixed top-0 left-0 h-screen w-[100vw]  -translate-x-full transition-all",
-            isSidemenuopen && "translate-x-0 duration-700 ease-in-out"
-          )}
-        >
-          <div className="text-black bg-slate-300 flex flex-col absolute left-0 top-0 h-screen w-[13rem] z-50">
-            {/* responsive top bar header */}
-            <section className="flex mt-1 gap-2 border-b-2 py-2 px-4 justify-between items-end border-stone-600">
-              <p style={poppins} className="text-xl cursor-pointer">
-                Foodie.com
-              </p>
-              <SkipBack
-                onClick={() => setsidemenu(false)}
-                size={32}
-                className="text-xl cursor-pointer bg-gray-200 w-8 h-8"
-                style={{
-                  borderRadius: "18px",
-                  padding: "5px",
-                }}
-              />
-            </section>
-
-            {/* responsive body section */}
-            <section className="p-4">
-              <p className="mb-4 cursor-pointer">Home</p>
-              <p className="mb-4 cursor-pointer">Contact Us</p>
-              <p className="mb-4 cursor-pointer">Cart</p>
-              <p className="cursor-pointer">About</p>
-            </section>
-          </div>
-        </section>
+       <MobileResponsive/>
 
         <section className="flex gap-1 ">
-          <button
-            style={filterstyling}
-            type="button"
-            className="flex"
-          >
-            <Link to={'/'}>Home</Link> 
-          </button>
+          <Link to={"/"}>
+            
+            <button style={filterstyling} type="button" className="flex">
+              Home
+            </button>
+          </Link>
 
-          <button style={filterstyling}
-           className="flex" 
-          >
-            Cart
-          </button>
+          <Link to={"/cartpage"}>
+            {" "}
+            <button
+              style={filterstyling}
+              className="flex"
+              onClick={() => {
+                fetchCartProdcuts();
+              }}
+            >
+              Cart
+            </button>
+          </Link>
         </section>
       </nav>
 
@@ -418,10 +406,20 @@ const FirmCollection = () => {
                         alt=""
                         className="w-[220px] h-[180px] rounded bg-gray-100"
                       />
-                      <button className="flex justify-center absolute bottom-0 py-1 px-4 rounded bg-white font-bold  text-green-600">
-                        {" "}
-                        Add
-                      </button>
+                      {isProductInCart(value._id) ? (
+                        <button className="flex justify-center absolute bottom-0 py-1 px-4 rounded bg-white font-bold text-red-600">
+                          <Link to={"/cartpage"}>Buy Now</Link>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            addtocart(value);
+                          }}
+                          className="flex justify-center absolute bottom-0 py-1 px-4 rounded bg-white font-bold text-green-600"
+                        >
+                          Add
+                        </button>
+                      )}
                     </div>
                   </div>
                   <details
@@ -441,7 +439,11 @@ const FirmCollection = () => {
           </div>
         ) : (
           <>
-            <SyncLoader size={20} margin={10} color="#2dc644" />
+          <div style={poppins} className="text-xl mt-32 font-bold text-center"> 
+          <BeatLoader speedMultiplier={1} color="#4ac058" />
+
+            No Product in collection,Please login and add products
+          </div>
           </>
         )}
       </section>

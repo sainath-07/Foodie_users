@@ -5,6 +5,8 @@ import ResturantChain from "../components/ResturantChain";
 import Register from "../components/userforms/Register";
 import Login from "../components/userforms/Login";
 
+// const loginToken = localStorage.getItem("loginToken");
+
 let initialState = {
   showLogin: false,
   showRegister: false,
@@ -40,20 +42,30 @@ const reducerfun = (state, action) => {
 };
 const Navigation = () => {
   const [currentState, dispatchfun] = useReducer(reducerfun, initialState);
+  
 
+  const handleLogout = () => {
+    if (window.confirm("Are you sure do you want to logout..?")) {
+      localStorage.clear();
+      window.location.reload();
+    }
+  };
 
 
   const handleLogin = () => {
     dispatchfun({
       type: "LOGIN",
     });
+    localStorage.clear();
   };
 
   const handleSignup = () => {
     dispatchfun({
       type: "SIGNUP",
     });
+    localStorage.clear();
   };
+
   const handleHomePage = () => {
     dispatchfun({
       type: "HOMEPAGE",
@@ -69,10 +81,20 @@ const Navigation = () => {
           handleLogin={handleLogin}
           handleSignup={handleSignup}
           handleHomePage={handleHomePage}
+          handleLogout={handleLogout}
+          // showlogout={showlogout}
         />
 
-        {showRegister && <Register showRegister={showRegister} />}
-        {showLogin && <Login showLogin={showLogin} />}
+        {showRegister && (
+          <Register showRegister={showRegister} handleLogin={handleLogin} />
+        )}
+        {showLogin && (
+          <Login
+            showLogin={showLogin}
+            handleLogout={handleLogout}
+            handleHomePage={handleHomePage}
+          />
+        )}
         {!showLogin && !showRegister && <StaticImages />}
         {!showLogin && !showRegister && <ResturantChain />}
       </div>

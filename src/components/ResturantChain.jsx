@@ -1,31 +1,51 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Api_Url } from "../utils/ApiUrl";
-import { PulseLoader } from "react-spinners";
+import { BeatLoader, ClipLoader, PulseLoader } from "react-spinners";
 import { Link } from "react-router-dom";
+import { data } from "../App";
+import FooterPage from "./FooterPage";
+import toast from "react-hot-toast";
 
 const ResturantChain = () => {
   const [firms, setFirms] = useState([]);
   const [dummyfirms, setdummyFirms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { fetchCartProdcuts } = useContext(data);
+  const [searchResturants, setsearchResturants] = useState("");
 
   useEffect(() => {
     fetchFirmsApi();
   }, []);
 
+  // Firm Logic
   const fetchFirmsApi = async () => {
     try {
       const response = await axios.get(`${Api_Url}/vendor/all-vendors`);
       if (response.status >= 200 && response.status <= 299) {
-        console.log(response.data.vendor, "response.data.vendor");
+        // console.log(response.data.vendor, "response.data.vendor");
         setFirms(response.data.vendor);
         setdummyFirms(response.data.vendor);
       }
     } catch (error) {
       console.log(error, "internal server error");
-      alert("Failed to fetch the data.");
+      // alert("Failed to fetch the data.");
+      toast.error("Failed to fetch the data.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlesearchResturants = (value) => {
+    let searchvalue = value.toLowerCase();
+    setsearchResturants(searchvalue);
+
+    const filteredResturant = dummyfirms.filter((each, index) =>
+      each.firm.firmName.toLowerCase().includes(searchvalue)
+    );
+
+    if (filteredResturant) {
+      setFirms(filteredResturant);
     }
   };
 
@@ -39,7 +59,7 @@ const ResturantChain = () => {
     borderRadius: "22px",
     fontFamily: "Poppins, sans-serif",
     fontWeight: 500,
-    color: "gray",
+    // color: "gray",
     fontStyle: "normal",
     border: " 1px solid rgba(2, 6, 12, 0.15)",
     boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
@@ -59,6 +79,7 @@ const ResturantChain = () => {
       );
       setFirms(Alldata);
     }
+    setsearchResturants("");
   };
 
   return (
@@ -67,7 +88,7 @@ const ResturantChain = () => {
         {loading ? (
           <>
             <div className="flex justify-center">
-              <PulseLoader color="#4abf62" />
+              <BeatLoader speedMultiplier={3} color="#4ac058" />
             </div>
           </>
         ) : (
@@ -82,56 +103,70 @@ const ResturantChain = () => {
             >
               Discover best restaurants
             </p>
-            <div className="flex gap-4 flex-wrap mt-4">
-              <button
-                className="text-center text-[16px] px-4 py-1 cursor-pointer"
-                style={filterstyling}
-                onClick={() => handleRegion("All")}
-              >
-                All
-              </button>
-              <button
-                className="text-center text-[16px] px-4 py-1 cursor-pointer"
-                style={filterstyling}
-                onClick={() => handleRegion("South-Indian")}
-              >
-                South-Indian
-              </button>
-              <button
-                className="text-center text-[16px] px-4 py-1 cursor-pointer"
-                style={filterstyling}
-                onClick={() => handleRegion("North-Indian")}
-              >
-                North-Indian
-              </button>
-              <button
-                className="text-center text-[16px] px-4 py-1 cursor-pointer"
-                style={filterstyling}
-                onClick={() => handleRegion("chinese")}
-              >
-                Chinese
-              </button>
-              <button
-                className="text-center text-[16px] px-4 py-1 cursor-pointer"
-                style={filterstyling}
-                onClick={() => handleRegion("bakery")}
-              >
-                Bakery
-              </button>
-              <button
-                className="text-center text-[16px] px-4 py-1 cursor-pointer"
-                style={filterstyling}
-                onClick={() => handleRegion("veg")}
-              >
-                Veg
-              </button>
-              <button
-                className="text-center text-[16px] px-4 py-1 cursor-pointer"
-                style={filterstyling}
-                onClick={() => handleRegion("Non-veg")}
-              >
-                Non-Veg
-              </button>
+            <div className="flex flex-wrap gap-4 mt-4 justify-between">
+              <div className="flex gap-3 flex-wrap">
+                <button
+                  className="text-center text-[16px] px-4 py-1 cursor-pointer"
+                  style={filterstyling}
+                  onClick={() => handleRegion("All")}
+                >
+                  All
+                </button>
+                <button
+                  className="text-center text-[16px] px-4 py-1 cursor-pointer"
+                  style={filterstyling}
+                  onClick={() => handleRegion("South-Indian")}
+                >
+                  South-Indian
+                </button>
+                <button
+                  className="text-center text-[16px] px-4 py-1 cursor-pointer"
+                  style={filterstyling}
+                  onClick={() => handleRegion("North-Indian")}
+                >
+                  North-Indian
+                </button>
+                <button
+                  className="text-center text-[16px] px-4 py-1 cursor-pointer"
+                  style={filterstyling}
+                  onClick={() => handleRegion("chinese")}
+                >
+                  Chinese
+                </button>
+                <button
+                  className="text-center text-[16px] px-4 py-1 cursor-pointer"
+                  style={filterstyling}
+                  onClick={() => handleRegion("bakery")}
+                >
+                  Bakery
+                </button>
+                <button
+                  className="text-center text-[16px] px-4 py-1 cursor-pointer"
+                  style={filterstyling}
+                  onClick={() => handleRegion("veg")}
+                >
+                  Veg
+                </button>
+                <button
+                  className="text-center text-[16px] px-4 py-1 cursor-pointer"
+                  style={filterstyling}
+                  onClick={() => handleRegion("Non-veg")}
+                >
+                  Non-Veg
+                </button>
+              </div>
+              <div className=" w-[100%] sm:w-[75%] mx-auto md:w-[60%] h-[50px] lg:w-[50%] xl:w-[40%]">
+                <input
+                  type="text"
+                  className="text-[14px] sm:text-[16px] w-full h-full p-3 
+                  sm:p-4
+                  focus:outline-none"
+                  style={filterstyling}
+                  placeholder="Search Your favourite Resturants 🔍"
+                  value={searchResturants}
+                  onChange={(e) => handlesearchResturants(e.target.value)}
+                />
+              </div>
             </div>
             {/* blue */}
             <div className="flex flex-wrap sm:gap-6 gap-4 mt-8 justify-center">
@@ -142,9 +177,14 @@ const ResturantChain = () => {
                     firm || {};
                   return (
                     <React.Fragment key={_id}>
-                      <Link to={`/products/${firmName}/${firm._id}/${area}`}>
+                      <Link
+                        to={`/products/${firmName}/${firm._id}/${area}`}
+                        onClick={() => {
+                          fetchCartProdcuts();
+                        }}
+                      >
                         <div
-                          className="flex flex-col  cursor-pointer p-4  rounded relative"
+                          className="flex flex-col  gap-2 cursor-pointer p-4  rounded relative"
                           // red border
                           style={{
                             boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
@@ -180,19 +220,19 @@ const ResturantChain = () => {
                               </strong>
                             </li>
                             <li
-                              className="flex flex-wrap gap-2 text-xs text-gray-400"
+                              className="flex flex-wrap gap-2 text-base  text-gray-600 h-[50px] w-[250px] items-center"
                               style={poppins}
                             >
                               {region.map((value, index) => {
                                 return (
                                   <React.Fragment key={index}>
-                                    <span className="">{value}</span>
+                                    <span>{value}</span>
                                   </React.Fragment>
                                 );
                               })}
                             </li>
                             <li
-                              className=" text-green-600"
+                              className=" text-green-600 -mt-1"
                               style={{
                                 fontFamily: "Poppins, sans-serif",
                                 fontWeight: 500,
@@ -214,12 +254,17 @@ const ResturantChain = () => {
                   );
                 })
               ) : (
-                <p>No firms available.</p>
+                <>
+                  <BeatLoader speedMultiplier={1} color="#4ac058" />
+                  <p className="text-xl font-semibold">No firms available.</p>
+                </>
               )}
             </div>
           </>
         )}
       </section>
+
+      <FooterPage/>
     </>
   );
 };
