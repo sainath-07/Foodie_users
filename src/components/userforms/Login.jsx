@@ -28,6 +28,7 @@ function Login({ showLogin, handleHomePage,handleLogout }) {
         console.log(data, "data");
 
         // alert("login is successfull");
+        toast.success("login is successfull");
         // handleLogout()
         const userdetails = JSON.stringify(data.user);
         localStorage.setItem("loginToken", data.token);

@@ -4,6 +4,7 @@ import StaticImages from "../components/staticImages/StaticImages";
 import ResturantChain from "../components/ResturantChain";
 import Register from "../components/userforms/Register";
 import Login from "../components/userforms/Login";
+import toast from "react-hot-toast";
 
 // const loginToken = localStorage.getItem("loginToken");
 
@@ -48,6 +49,7 @@ const Navigation = () => {
     if (window.confirm("Are you sure do you want to logout..?")) {
       localStorage.clear();
       window.location.reload();
+      toast.success('Logout is successfull')
     }
   };
 
