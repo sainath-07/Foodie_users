@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { data } from "../App";
 import { Api_Url } from "../utils/ApiUrl";
 import {
@@ -13,6 +13,8 @@ import clsx from "clsx";
 import MobileResponsive from "./MobileResponsive";
 import FooterPage from "./FooterPage";
 import axios from "axios";
+import toast from "react-hot-toast";
+import { load } from "@cashfreepayments/cashfree-js";
 
 const UserCartPage = () => {
   const {
@@ -24,6 +26,8 @@ const UserCartPage = () => {
     isSidemenuopen,
   } = useContext(data);
   // console.log(cartProducts, "cartProducts");
+
+  const [orderId, setorderId] = useState("");
 
   const handleQuantity = (useraction, productId) => {
     switch (useraction) {
@@ -89,28 +93,74 @@ const UserCartPage = () => {
   let Taxestimate = totalAmount * 0.08;
   const totalAmountwithtax = totalAmount + Math.round(Taxestimate);
 
-  let payment = {
-    name: "sainath",
-    amount: totalAmountwithtax,
-    number: "9010995323",
-    MID: "MID" + Date.now(),
-    transactionId: "T" + Date.now(),
+  const getToken = () => localStorage.getItem("loginToken");
+  const userToken = getToken();
+
+  let cashfree;
+
+  let initialiseSDK = async function () {
+    cashfree = await load({
+      mode: "sandbox",
+    });
   };
 
-  // Paymentgate way integration Logick
-  const handlePayNow = async () => {
-    console.log("hello");
+  initialiseSDK();
+
+  const getSessionId = async () => {
     try {
-      await axios
-        .post(`${Api_Url}/order`, payment)
-        .then((res) => {
-          console.log(res);
-          if (res.data.success == true) {
-            window.location.href =
-              res.data.data.instrumnetResponse.redirectInfo.url;
-          }
-        })
-        .catch((res) => console.log(res));
+      let res = await axios.post(`${Api_Url}/payment`, {
+        order_amount: totalAmountwithtax,
+        customer_details: {
+          customer_id: "132",
+          customer_name: "sainath",
+          customer_email: "sainath@gab.com",
+          customer_phone: "+919010995323",
+        },
+      });
+
+      if (res.data && res.data.payment_session_id) {
+        console.log(res.data);
+        setorderId(res.data.order_id);
+        return res.data.payment_session_id;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const verifyPayment = async (orderId) => {
+    try {
+      let res = await axios.post(`${Api_Url}/verify`, {
+        orderId,
+      });
+
+      console.log(res, "res verfiy payment");
+      if (res && res.data) {
+        alert("payment Verified");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handlePayNow = async (e) => {
+    e.preventDefault();
+    if (!userToken) {
+      toast.error("Please login to do payment");
+      return;
+    }
+
+    try {
+      let sessionId = await getSessionId();
+      let checkoutOptions = {
+        paymentSessionId: sessionId,
+        redirectTarget: "_modal",
+      };
+
+      cashfree.checkout(checkoutOptions).then((res) => {
+        console.log("payment initialised");
+        verifyPayment(orderId);
+      });
     } catch (error) {
       console.log(error);
     }
