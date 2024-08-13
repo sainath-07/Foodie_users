@@ -1,4 +1,4 @@
-import { SkipBack, StepForward } from "lucide-react";
+import { MessageCircleCode, ShoppingBag, SkipBack, StepForward, TextCursor } from "lucide-react";
 import React, { useContext, useState } from "react";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
@@ -13,7 +13,7 @@ const TopBar = ({
   handleHomePage,
   handleLogout,
 }) => {
-  const { isSidemenuopen, setsidemenu } = useContext(data);
+  const { isSidemenuopen, setsidemenu, fetchCartProdcuts } = useContext(data);
 
   const loginToken = getToken();
 
@@ -42,7 +42,7 @@ const TopBar = ({
     <>
       <nav
         className={clsx(
-          "mx-auto pr-1  border-2 gap-1 flex justify-between h-[52px] items-center md:px-8 fixed w-screen top-0 right-0 z-50 transition-all duration-300"
+          "mx-auto pr-1 gap-1 flex justify-between h-[52px] items-center md:px-8 fixed w-screen top-0 right-0 z-50 transition-all duration-300"
         )}
         style={{
           boxShadow:
@@ -55,17 +55,18 @@ const TopBar = ({
         <section className="flex gap-1">
           <StepForward
             size={30}
-            className="md:hidden inline-block"
+            className="md:hidden inline-block cursor-pointer"
             onClick={() => setsidemenu(true)}
           />
 
-          <p
+          <a
             style={poppins}
             className="text-lg cursor-pointer md:text-2xl"
             onClick={handleHomePage}
+            href="#"
           >
             Foodie.com
-          </p>
+          </a>
         </section>
 
         {/* Mobile responsive code */}
@@ -74,38 +75,57 @@ const TopBar = ({
         <section className="flex gap-1">
           {loginToken ? (
             <>
+              <Link to={"/cartpage"}>
+                <button
+                  className="hidden md:flex gap-1"
+                  style={filterstyling}
+                  type="button"
+                  onClick={() => {
+                    fetchCartProdcuts();
+                  }}
+                >
+                  <ShoppingBag/>
+                  Cart
+                </button>
+              </Link>
+              <a
+                style={filterstyling}
+                href="https://wa.me/+919010995323/?text=Hello"
+                data-action="share/whatsapp/share"
+                target="_blank"
+                className={clsx( "flex gap-1 ",
+                  isSidemenuopen && "relative -z-10 cursor-pointer"
+                )}
+              >
+            <MessageCircleCode />
+
+               Chat
+              </a>
               <button
                 style={filterstyling}
                 type="button"
-                className="flex"
+                className={clsx(isSidemenuopen && "relative -z-10")}
                 onClick={handleLogout}
               >
                 Logout
               </button>
-              <Link to={"/cartpage"}>
-                <button
-                  className="hidden md:flex"
-                  style={filterstyling}
-                  type="button"
-                >
-                  CartPage
-                </button>
-              </Link>
             </>
           ) : (
             <>
               <button
                 style={filterstyling}
                 type="button"
-                className="flex"
+                // className="flex"
                 onClick={handleLogin}
+                className={clsx(isSidemenuopen && "relative -z-10")}
               >
                 Login
               </button>
               <button
                 style={filterstyling}
-                className="flex"
+                // className="flex"
                 onClick={handleSignup}
+                className={clsx(isSidemenuopen && "relative -z-10")}
               >
                 Signup
               </button>

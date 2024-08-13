@@ -5,7 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { BeatLoader, SyncLoader } from "react-spinners";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import clsx from "clsx";
-import { SkipBack, StepForward } from "lucide-react";
+import { House, ShoppingBag, SkipBack, StepForward } from "lucide-react";
 import { data } from "../App";
 import MobileResponsive from "./MobileResponsive";
 import FooterPage from "./FooterPage";
@@ -128,26 +128,25 @@ const FirmCollection = () => {
           WebkitBackdropFilter: "blur(10px)",
         }}
       >
-        <section className="flex gap-1">
+        <section className="flex sm:gap-4">
           <StepForward
             size={30}
-            className="md:hidden inline-block"
+            className="md:hidden inline-block cursor-pointer"
             onClick={() => setsidemenu(true)}
           />
 
-          <p style={poppins} className="text-xl cursor-pointer md:text-2xl">
+          <p style={poppins} className="text-lg cursor-pointer md:text-xl">
             <Link to={"/"}>Foodie.com</Link>
           </p>
         </section>
 
         {/* Mobile responsive code */}
-       <MobileResponsive/>
+        <MobileResponsive />
 
-        <section className="flex gap-1 ">
+        <section className="flex gap-1">
           <Link to={"/"}>
-            
-            <button style={filterstyling} type="button" className="flex">
-              Home
+            <button style={filterstyling} type="button" className="flex gap-1">
+            <House/> Home
             </button>
           </Link>
 
@@ -155,12 +154,12 @@ const FirmCollection = () => {
             {" "}
             <button
               style={filterstyling}
-              className="flex"
+              className="flex gap-1"
               onClick={() => {
                 fetchCartProdcuts();
               }}
             >
-              Cart
+              <ShoppingBag/> Cart
             </button>
           </Link>
         </section>
@@ -182,9 +181,7 @@ const FirmCollection = () => {
               style={{
                 boxShadow:
                   "rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px",
-                // backgroundColor: "rgba(255, 255, 255, 0.7)", // White with 70% opacity
-                // backdropFilter: "blur(10px)", // 10px blur effect
-                // WebkitBackdropFilter: "blur(10px)", // Safari support
+               
               }}
             >
               <div className="flex gap-2 flex-wrap mt-4">
@@ -439,11 +436,13 @@ const FirmCollection = () => {
           </div>
         ) : (
           <>
-          <div style={poppins} className="text-xl mt-32 font-bold text-center"> 
-          <BeatLoader speedMultiplier={1} color="#4ac058" />
-
-            No Product in collection,Please login and add products
-          </div>
+            <div
+              style={poppins}
+              className="text-xl mt-32 font-bold text-center"
+            >
+              <BeatLoader speedMultiplier={1} color="#4ac058" />
+              No Product in collection,Please login and add products
+            </div>
           </>
         )}
       </section>

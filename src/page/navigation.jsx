@@ -82,7 +82,6 @@ const Navigation = () => {
           handleSignup={handleSignup}
           handleHomePage={handleHomePage}
           handleLogout={handleLogout}
-          // showlogout={showlogout}
         />
 
         {showRegister && (
