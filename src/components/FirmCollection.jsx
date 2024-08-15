@@ -131,10 +131,9 @@ const FirmCollection = () => {
         <section className="flex sm:gap-4">
           <StepForward
             size={30}
-            className="md:hidden inline-block cursor-pointer"
+            className=" inline-block cursor-pointer"
             onClick={() => setsidemenu(true)}
           />
-
           <p style={poppins} className="text-lg cursor-pointer md:text-xl">
             <Link to={"/"}>Foodie.com</Link>
           </p>
@@ -440,7 +439,7 @@ const FirmCollection = () => {
               style={poppins}
               className="text-xl mt-32 font-bold text-center"
             >
-              <BeatLoader speedMultiplier={1} color="#4ac058" />
+              <BeatLoader  color="#4ac058" />
               No Product in collection,Please login and add products
             </div>
           </>

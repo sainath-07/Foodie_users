@@ -184,7 +184,7 @@ const UserCartPage = () => {
           <section className="flex sm:gap-4">
             <StepForward
               size={30}
-              className="md:hidden inline-block"
+              className=" inline-block"
               onClick={() => setsidemenu(true)}
             />
 

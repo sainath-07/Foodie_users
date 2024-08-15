@@ -55,7 +55,7 @@ const TopBar = ({
         <section className="flex gap-1">
           <StepForward
             size={30}
-            className="md:hidden inline-block cursor-pointer"
+            className="inline-block cursor-pointer"
             onClick={() => setsidemenu(true)}
           />
 

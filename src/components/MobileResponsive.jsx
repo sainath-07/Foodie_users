@@ -1,7 +1,15 @@
 import clsx from "clsx";
 import React, { useContext } from "react";
 import { data } from "../App";
-import { CircleX, House, MessageCircleCode, Phone, ShoppingBag, SkipBack, X } from "lucide-react";
+import {
+  CircleX,
+  House,
+  MessageCircleCode,
+  Phone,
+  ShoppingBag,
+  SkipBack,
+  X,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 const MobileResponsive = () => {
@@ -30,7 +38,7 @@ const MobileResponsive = () => {
     <div>
       <section
         className={clsx(
-          "fixed top-0 left-0 h-screen w-[100vw]  -translate-x-full transition-all p-0 m-0",
+          "fixed top-0 left-0 h-screen w-[100vw]  -translate-x-full transition-all m-0  ",
           isSidemenuopen && "translate-x-0 duration-700 ease-in-out"
         )}
       >
@@ -44,7 +52,7 @@ const MobileResponsive = () => {
           }}
         >
           {/* responsive top bar header */}
-          <section className="flex mt-1 gap-2 border-b-2 py-2 px-4 justify-between items-end ">
+          <section className="flex mt-1 gap-2 border-b-2 py-2 px-4 justify-end items-end">
             <p style={poppins} className="text-xl cursor-pointer">
               Foodie.com
             </p>
@@ -60,13 +68,21 @@ const MobileResponsive = () => {
           </section>
 
           {/* responsive body section */}
-          <section className="p-4 flex flex-col h-full">
+          <section className="p-4 flex flex-col h-full ml-6">
             <Link to={"/"}>
               <p
                 className="mb-4 flex gap-1 justify-center  cursor-pointer text-center"
                 style={filterstyling}
               >
                 <House /> Home
+              </p>
+            </Link>
+            <Link to={"/cartpage"}>
+              <p
+                className="mb-4 cursor-pointer text-center flex justify-center gap-1 items-center"
+                style={filterstyling}
+              >
+                <ShoppingBag /> Cart
               </p>
             </Link>
             <a
@@ -77,18 +93,6 @@ const MobileResponsive = () => {
               <Phone />
               Contact
             </a>
-            <Link to={"/cartpage"}>
-              <p
-                className="mb-4 cursor-pointer text-center flex justify-center gap-1 items-center"
-                style={filterstyling}
-              >
-                {/* <i
-                  className="fas fa-shopping-cart px-1 text-orange-600"
-                  style={{ fontSize: "20px" }}
-                ></i>{" "} */}
-               <ShoppingBag/> Cart
-              </p>
-            </Link>
 
             <a
               className="mb-4  border-2  flex justify-center gap-1 items-center cursor-pointer text-center"
@@ -97,7 +101,7 @@ const MobileResponsive = () => {
               data-action="share/whatsapp/share"
               target="_blank"
             >
-             <MessageCircleCode/>
+              <MessageCircleCode />
               Chat
             </a>
           </section>
