@@ -61,7 +61,10 @@ const UserCartPage = () => {
 
         setcartProducts(DECREMENT);
         break;
-    }
+
+        default : return null;
+    };
+    
   };
 
   let poppins = {
@@ -136,7 +139,9 @@ const UserCartPage = () => {
 
       console.log(res, "res verfiy payment");
       if (res && res.data) {
-        alert("payment Verified");
+        console.log(res)
+        setcartProducts([])
+        toast.success('payment is successfull')
       }
     } catch (error) {
       console.log(error);
