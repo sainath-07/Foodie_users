@@ -111,10 +111,10 @@ const UserCartPage = () => {
       let res = await axios.post(`${Api_Url}/payment`, {
         order_amount: totalAmountwithtax,
         customer_details: {
-          customer_id: "132",
+          customer_id: "sainath07",
           customer_name: "sainath",
-          customer_email: "sainath@gab.com",
-          customer_phone: "+919010995323",
+          customer_email: "sainath@gmail.com",
+          customer_phone: "9010995323",
         },
       });
 
