@@ -167,30 +167,7 @@ const App = () => {
 
   return (
     <>
-      <data.Provider
-        value={{
-          addtocart,
-          setcartProducts,
-          cartProducts,
-          handleDelete,
-          fetchCartProdcuts,
-          isSidemenuopen,
-          setsidemenu,
-          updateQuantityBackend,
-        }}
-      >
-        <Routes>
-          <Route path="/" element={<Navigation />} />
-          <Route path="/cartpage" element={<UserCartPage />} />
-          <Route path="/*" element={<PageNotFound />} />
-          <Route
-            path="/products/:frimName/:firmId/:area"
-            element={<FirmCollection />}
-          />
-        </Routes>
-      </data.Provider>
-
-      {/* <Detector
+      <Detector
         render={({ online }) =>
           online ? (
             <>
@@ -229,7 +206,7 @@ const App = () => {
             </>
           )
         }
-      /> */}
+      />
     </>
   );
 };
