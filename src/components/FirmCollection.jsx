@@ -440,7 +440,7 @@ const FirmCollection = () => {
               className="text-xl mt-32 font-bold text-center"
             >
               <BeatLoader  color="#4ac058" />
-              No Product in collection,Please login and add products
+              No Product in collection,Please login to vendor dashboard and add products
             </div>
           </>
         )}
